@@ -9,7 +9,6 @@ var assert = require('assert'),
 describe('Registry API open tests', () => {
     it('Should open a subkey provided a predefined key', () => {
         var key = registry.openKeyFromPredefined(windef.HKEY.HKEY_CLASSES_ROOT, '.txt', windef.KEY_ACCESS.KEY_READ);
-        console.log(key.handle);
         assert.equal(key.handle !== null, true);
         key.close();
     });
@@ -23,7 +22,7 @@ describe('Registry API open tests', () => {
 
 describe('Create Key Tests', function () {
     it('Should create a new key and delete it', () => {
-        var key = registry.openKeyFromPredefined(windef.HKEY.HKEY_CURRENT_USER, 'Software\\Node.js\\Components', windef.KEY_ACCESS.KEY_ALL_ACCESS);
+        var key = registry.openKeyFromPredefined(windef.HKEY.HKEY_CURRENT_USER, 'Software\\Classes', windef.KEY_ACCESS.KEY_ALL_ACCESS);
 
         assert(key.handle !== undefined);
         assert(key.handle !== null);
@@ -50,16 +49,16 @@ describe('Create Key Tests', function () {
 
 describe('Set / Query Value Tests', function () {
     it('Should set and read REG_SZ Value', () => {
-        var key = registry.openKeyFromPredefined(windef.HKEY.HKEY_CURRENT_USER, 'Software\\Node.js\\Components', windef.KEY_ACCESS.KEY_ALL_ACCESS);
+        var key = registry.openKeyFromPredefined(windef.HKEY.HKEY_CURRENT_USER, 'Software', windef.KEY_ACCESS.KEY_ALL_ACCESS);
 
         assert.equal(key.handle !== null, true);
 
         registry.setValueForKeyObject(key, 'test_value_name', windef.REG_VALUE_TYPE.REG_SZ, 'test_value');
 
         var value = registry.queryValueForKeyObject(key, 'test_value_name');
-        console.log('her is  value:' + value);
         assert.equal(value, 'test_value');
-        console.log('lngth:' + value.length);
+
+        registry.deleteValue(key, 'test_value_name');
         key.close();
     });
 });

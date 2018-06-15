@@ -34,7 +34,7 @@ describe('Key Open Tests', () => {
 
 describe('Create Key Tests', function () {
     it('Should create a new key and Delete it', () => {
-        var key = new Key(windef.HKEY.HKEY_CURRENT_USER, 'Software\\Node.js\\Components', windef.KEY_ACCESS.KEY_ALL_ACCESS);
+        var key = new Key(windef.HKEY.HKEY_CURRENT_USER, 'Software\\Classes', windef.KEY_ACCESS.KEY_ALL_ACCESS);
 
         assert(key.handle !== undefined);
         assert(key.handle !== null);
@@ -69,6 +69,8 @@ describe('Set / Query Value Tests', function () {
         var value = key.getValue('test_value_name');
 
         assert.equal(value, 'test_value');
+
+        key.deleteValue('test_value_name');
         key.close();
     });
 });
