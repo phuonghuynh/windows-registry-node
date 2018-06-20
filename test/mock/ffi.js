@@ -8,19 +8,19 @@ module.exports = {
         var lib;
         switch (libFile) {
             case 'Advapi32':
-                assert(funcs.RegOpenKeyExA.constructor === Array);
-                if(funcs.RegOpenKeyExA[1][0].indirection === types.HKEY.indirection &&
-                   funcs.RegOpenKeyExA[1][0].name === types.HKEY.name) {
+                assert(funcs.RegOpenKeyExW.constructor === Array);
+                if(funcs.RegOpenKeyExW[1][0].indirection === types.HKEY.indirection &&
+                   funcs.RegOpenKeyExW[1][0].name === types.HKEY.name) {
                     // this is redefition for the library only specifying
                     // a different key type
                     lib = advApi;
                     break;
                 }
-                assert(funcs.RegQueryValueExA.constructor === Array);
-                assert(funcs.RegCreateKeyExA.constructor === Array);
-                assert(funcs.RegDeleteTreeA.constructor === Array);
+                assert(funcs.RegQueryValueExW.constructor === Array);
+                assert(funcs.RegCreateKeyExW.constructor === Array);
+                assert(funcs.RegDeleteTreeW.constructor === Array);
                 assert(funcs.RegCloseKey.constructor === Array);
-                assert(funcs.RegSetValueExA.constructor === Array);
+                assert(funcs.RegSetValueExW.constructor === Array);
                 assert(typeof funcs === 'object');
                 lib = advApi;
                 break;

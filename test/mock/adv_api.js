@@ -45,8 +45,8 @@ var advApi = {
     _Inout_opt_ LPDWORD lpcbData
     );
     */
-    RegQueryValueExA: function (hKey, valueName, shouldBeNull, lpType, lpData, lpcbData) {
-        debug('RegQueryValueExA');
+    RegQueryValueExW: function (hKey, valueName, shouldBeNull, lpType, lpData, lpcbData) {
+        debug('RegQueryValueExW');
         if (lpData === null) {
             debug(keys[hKey.address()].values.test_value_name);
             lpType.writeUInt32LE(windef.REG_VALUE_TYPE.REG_SZ, 0);
@@ -54,7 +54,7 @@ var advApi = {
             return 0;
         }
 
-        lpData.write(keys[hKey.address()].values[valueName].value, 'utf8');
+        keys[hKey.address()].values[valueName].valueBuffer.copy(lpData);
         lpType.writeUInt16LE(windef.REG_VALUE_TYPE.REG_SZ);
         return 0;
     },
@@ -67,9 +67,9 @@ var advApi = {
     _Out_    PHKEY   phkResult
     );
     */
-    RegOpenKeyExA: function (hKey, subKeyName, shouldBeZero, accessLevel, pHkey) {
+    RegOpenKeyExW: function (hKey, subKeyName, shouldBeZero, accessLevel, pHkey) {
         var accessLevelFound = findValueInHash(accessLevel, windef.KEY_ACCESS);
-        debug('Mock: RegOpenKeyExA subkey: ' + subKeyName);
+        debug('Mock: RegOpenKeyExW subkey: ' + subKeyName);
         if (hKey.address) {
             debug('Mock: hKey address:' + hKey.address());
         }
@@ -123,8 +123,8 @@ var advApi = {
     _In_             DWORD   cbData
     );
     */
-    RegSetValueExA: function (hKey, valueName, shouldBeNull, valueType, valueBuffer, bufferLength) {
-        debug('Mock: RegSetValueExA');
+    RegSetValueExW: function (hKey, valueName, shouldBeNull, valueType, valueBuffer, bufferLength) {
+        debug('Mock: RegSetValueExW');
         // predefined key
         if (typeof hKey === 'number') {
             assert(findValueInHash(hKey, windef.HKEY), 'Mock: Invalid predefined key specified');
@@ -136,9 +136,16 @@ var advApi = {
         assert(valueBuffer.constructor === Buffer);
         assert(typeof bufferLength === 'number');
 
+        // Use the passed length, not the length of valueBuffer
+        var value = ref.reinterpret(valueBuffer, bufferLength, 0);
+
+        // Copy the value to a new buffer and store that
+        var valueCopy = new Buffer(bufferLength);
+        value.copy(valueCopy, 0, 0, bufferLength);
+
         keys[hKey.address()].values[valueName] = {
             valueType: valueType,
-            value: ref.readCString(valueBuffer),
+            valueBuffer: valueCopy,
             length: bufferLength
         };
         return 0;
@@ -156,8 +163,8 @@ var advApi = {
         _Out_opt_  LPDWORD               lpdwDisposition
       );
     */
-    RegCreateKeyExA: function (hKey, subKeyName, shouldBeNull,  shouldBeNull2, securityAttributes, accessLevel, shouldBeNull3, pHkey, shouldBeNull4) {
-        debug('Mock: RegCreateKeyExA');
+    RegCreateKeyExW: function (hKey, subKeyName, shouldBeNull,  shouldBeNull2, securityAttributes, accessLevel, shouldBeNull3, pHkey, shouldBeNull4) {
+        debug('Mock: RegCreateKeyExW');
         assert(hKey.constructor === Buffer);
         assert(typeof subKeyName === 'string');
         assert(shouldBeNull === null);
@@ -192,7 +199,7 @@ var advApi = {
       _In_opt_ LPCTSTR lpSubKey
       );
     */
-    RegDeleteTreeA: function (hKey, subKeyName) {
+    RegDeleteTreeW: function (hKey, subKeyName) {
         if (typeof hKey === 'number') {
             assert(findValueInHash(hKey, windef.HKEY), 'Mock: Invalid predefined key specified');
         } else {

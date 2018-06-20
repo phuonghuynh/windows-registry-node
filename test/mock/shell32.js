@@ -34,10 +34,10 @@ var SHELLEXECUTEINFO  = struct({
 });
 
 var shell32Mock = {
-    ShellExecuteExA: function () {
+    ShellExecuteExW: function () {
     }
 };
-shell32Mock.ShellExecuteExA.async = function (type, cb) {
+shell32Mock.ShellExecuteExW.async = function (type, cb) {
     debug('async');
     debug(type.deref().lpFile);
     assert.deepEqual(type.type.fields.cbSize, SHELLEXECUTEINFO.fields.cbSize);
