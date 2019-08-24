@@ -8,12 +8,10 @@
   },
   "dependencies": {
     "debug": "^2.2.0",
-    "ffi": "^2.3.0",
-    "ref": "^1.2.0",
+    "ref": "git+https://github.com/phuonghuynh/ref.git#v1.3.5-rc.1",
+    "ffi": "git+https://github.com/phuonghuynh/node-ffi.git#v2.3.0-rc.1",
     "ref-struct": "^1.0.2",
-    "ref-union": "^1.0.0",
-    "nan": "^2.14.0",
-    "bindings": "git+https://github.com/phuonghuynh/node-bindings.git"
+    "ref-union": "^1.0.0"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
