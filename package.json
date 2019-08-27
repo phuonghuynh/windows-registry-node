@@ -7,11 +7,11 @@
     "test": "test"
   },
   "dependencies": {
-    "debug": "^2.2.0",
-    "ref": "git+https://github.com/phuonghuynh/ref.git#v1.3.5-rc.1",
-    "ffi": "git+https://github.com/phuonghuynh/node-ffi.git#v2.3.0-rc.1",
-    "ref-struct": "^1.0.2",
-    "ref-union": "^1.0.0"
+    "debug": "^4.1.1",
+    "ref": "^1.3.5",
+    "ffi": "^2.3.0",
+    "ref-struct": "^1.1.0",
+    "ref-union": "^1.0.1"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
